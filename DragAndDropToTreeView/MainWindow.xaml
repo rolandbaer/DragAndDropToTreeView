@@ -1,0 +1,71 @@
+﻿<Window x:Class="DragAndDropToTreeView.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:DragAndDropToTreeView"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        Title="MainWindow"
+        Width="623"
+        Height="461">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="1*" />
+      <ColumnDefinition Width="2*" />
+    </Grid.ColumnDefinitions>
+    <telerik:RadTreeView AllowDrop="True"
+                         ItemsSource="{Binding Folders}"
+                         SelectedItem="{Binding SelectedFolder,
+                                                Mode=TwoWay}"
+                         SelectionMode="Single">
+      <telerik:RadTreeView.Resources>
+        <HierarchicalDataTemplate DataType="{x:Type local:Folder}" ItemsSource="{Binding Children}">
+          <Grid VerticalAlignment="Center">
+            <TextBlock VerticalAlignment="Center"
+                       Text="{Binding Name}"
+                       local:TreeItemDropBehavior.IsEnabled="True" />
+          </Grid>
+        </HierarchicalDataTemplate>
+      </telerik:RadTreeView.Resources>
+    </telerik:RadTreeView>
+    <telerik:RadGridView Grid.Column="1"
+                         AllowDrop="True"
+                         AutoGenerateColumns="False"
+                         CanUserFreezeColumns="False"
+                         CanUserReorderColumns="False"
+                         CanUserResizeColumns="False"
+                         FontSize="12"
+                         IsFilteringAllowed="False"
+                         IsReadOnly="True"
+                         ItemsSource="{Binding SelectedFolder.Elements}"
+                         RowHeight="32"
+                         RowIndicatorVisibility="Collapsed"
+                         SelectionMode="Multiple"
+                         ShowGroupPanel="False"
+                         local:GridViewDragDropBehavior.IsEnabled="True"
+                         telerik:DragDropManager.AllowCapturedDrag="True"
+                         telerik:DragDropManager.AllowDrag="True">
+      <telerik:RadGridView.Resources>
+        <ResourceDictionary>
+          <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary>
+              <DataTemplate x:Key="DraggedItemTemplate">
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock Text="Dragging: " />
+                  <TextBlock FontWeight="Bold" Text="{Binding CurrentDraggedItems.Count}" />
+                  <TextBlock Text=" Element(s)" />
+                </StackPanel>
+              </DataTemplate>
+            </ResourceDictionary>
+          </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+      </telerik:RadGridView.Resources>
+      <telerik:RadGridView.Columns>
+        <telerik:GridViewDataColumn Width="100"
+                                    DataMemberBinding="{Binding Name}"
+                                    Header="Name" />
+        <telerik:GridViewDataColumn Width="250"
+                                    DataMemberBinding="{Binding Description}"
+                                    Header="Description" />
+      </telerik:RadGridView.Columns>
+    </telerik:RadGridView>
+  </Grid>
+</Window>
